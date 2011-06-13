@@ -115,7 +115,6 @@ get '/test/users' do
 end
 
 get '/' do
-  session[:access] = 1
   user = nil
   if session[:user_id] and 
     (user = Users.filter(:id=>session[:user_id]).first) and user.alive? then
