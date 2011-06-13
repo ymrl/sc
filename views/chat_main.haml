@@ -26,7 +26,7 @@
           .name
             = h a.name
           .content
-            = h a.content.to_s
+            = auto_link a.content.to_s
           .favs
             %div.favStars{:id=>"favStars_#{a.id}"}
               = '★' * a.favs 
@@ -47,5 +47,5 @@
       %input{:type=>'submit',:id=>'screenLoginButton'} Login
     .screenMessage
 %script
-  = "var logged_in = #{@logged_in?'true':'false'},user=#{@logged_in?"'#{@name}'":'null'};"
-  = "var loaded = new Date(#{@loaded.to_i*1000})"
+  - default_data = {:logged_in=>(@logged_in?true : false),:user=>(@logged_in?h(@name):nil),:loaded=>@loaded}.to_json
+  = "var default_data=#{default_data};"

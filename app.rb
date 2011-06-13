@@ -16,6 +16,10 @@ helpers do
   def h s
     CGI.escapeHTML s
   end
+  def auto_link s
+    regURL = /(http:\/\/[^'"\s　]+)/
+    s.split(regURL).map{|t|t.match(regURL)?"<a href=\"#{h t}\">#{h t}</a>":h(t)}.join('')
+  end
 end
 def recent t=Time.now-60
   { :since=>t.to_i,:time=>Time.now.to_i,
@@ -77,9 +81,9 @@ post '/api/user/login.json' do
   check = true
   user = (session[:user_id] ? Users.filter(:id=>session[:user_id]).filter(:joined=>true).first : nil)
 
-  if user
+  if user and user.alive?
     ret[:complete] = false
-    ret[:warn] = "You are already logged in. Please reload this page."
+    ret[:warn] = "You are already logged in as #{user.name}. Please reload this page."
   elsif !params[:name] or !Users.name_check(params[:name])
     ret[:complete] = false
     ret[:warn] = "Please enter your name (name.length <= 100)"

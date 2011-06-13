@@ -1,12 +1,14 @@
-var user = "";
-var logged_in = false;
-var loaded = new Date();
-var lastUpdate;
-var members = []
-
 $(function(){
 	var userInfo
-	lastUpdate = loaded;
+	if(default_data){
+		var logged_in = default_data.logged_in
+		var user = default_data.user
+		var lastUpdate = new Date(default_data.loaded)
+	}else{
+		var logged_in = false
+		var user = null
+		var lastUpdate = new Date()
+	}
 	var favButton = function(e){
 		var matched= $(this).attr('id').match(/addFav_(\d+)/);
 		if(!matched){return null;}
@@ -21,6 +23,21 @@ $(function(){
 			dataType:"json",
 			success:post_favButton
 		});
+	}
+
+	function autoLink(j){
+		var regURL = /(http:\/\/[^'"\s　]+)/
+		var s = j.text().split(regURL)
+		var r = ''
+		for(var i=0;i<s.length;i++){
+			if(s[i].match(regURL)){
+				var a = $('<a>').attr({href:s[i]}).text(s[i]);
+				r += a[0].outerHTML;
+			}else{
+				r += s[i]
+			}
+		}
+		j.html(r)
 	}
 
 	function post_favButton(data){
@@ -118,6 +135,7 @@ $(function(){
 		var messageName = $('<div class="name">').text(m.name)
 		var messageContent = $('<div class="content">').text(m.content)
 		var messageTime = $('<div class="time">').text(m.created)
+		autoLink(messageContent)
 		var messageFav = $('<div class="favs">').append(
 				$('<div class="favStars">').attr({id:"favStars_"+m.id}).text(manyStars(m.favs))
 				).append(
