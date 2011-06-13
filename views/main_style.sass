@@ -1,0 +1,171 @@
+*
+  margin: 0px
+  padding: 0px
+body
+  font-size: 14px
+  background-color: #ffffcc
+#header
+  h1
+    margin: 10px 10px
+    font-size: 18px
+    text-align:center
+    color: #660000
+  #logoutLink
+    width: 100px
+    float: right
+    font-size: 18px
+    text-align: right
+    margin: 0 10px 0 0
+    
+#chat
+  border: 1px solid #333333
+  background: #ffffff
+  margin: 10px 10px
+  position: relative
+  #controll
+    background: #cccccc
+    padding: 4px
+    z-index: 50
+    input#controllMessageInput
+      font-size: 20px
+      display: block
+      width: 95%
+      margin: 2px auto
+      padding: 2px
+  #content
+    position: relative
+    height: 300px
+    overflow: hidden
+    z-index: 60
+    min-height: 250px
+    #messages
+      overflow: auto
+      background-color: #FFFFFF
+      padding: 2px
+      z-index: 1
+      .message
+        margin: 0 0 5px 0
+        padding: 3px
+        position: relative
+        &:hover
+          background-color: #ffffcc
+        .name
+          font-weight: bold
+          font-size: 12px
+          margin: 0 202px 0 0
+        .content
+          margin: 0 202px 0 0
+          font-weight: normal
+          font-size: 18px
+        .time
+          font-size: 10px
+          text-align: right
+          position: absolute
+          bottom: 3px
+          right: 3px
+          width: 200px
+        .favs
+          position: absolute
+          top: 3px
+          right: 3px
+          width: 200px
+          color: #996
+          text-align: right
+          .favStars
+            display:block
+            overflow: hidden
+            text-overflow: ellipsis
+            width: 150px
+            height: 20px
+            float: left
+          .favNum
+            float: left
+            width: 20px
+            text-align: center
+          button.addFav
+            float: left
+            width: 30px
+            border: 1px solid #cc9
+            background-color: #fff
+            color: #996
+            border-radius: 3px
+    #members
+      background-color: #fff
+      width: 160px
+      position: absolute
+      bottom: 5px
+      left: 5px
+      border: 1px solid #666
+      z-index: 100
+      max-height: 200px
+      overflow: hidden
+      button#showMembersButton
+        font-size: 8px
+        border: 1px solid #ccc
+        background-color: #fff
+        border-radius: 4px
+        float: right
+        margin: 1px  
+        padding: 0 4px
+
+        &:active
+          background-color: #ccc
+      h2
+        font-size: 12px
+        font-weight: normal
+        text-align: center
+      ul
+        display: none
+        font-size: 12px
+        list-style-type: none
+        li
+          margin: 3px 5px 0
+#screen
+  background-color: rgba(0,0,0,0.5)
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  display: none
+  z-index: 200
+  .screenContent
+    background-color: #000000
+    width: 600px
+    border: 2px solid #666666
+    border-radius: 8px
+    margin: 50px auto
+    h2
+      margin: 10px auto 10px
+      text-align: center
+      color: #ffffff
+      font-size: 24px
+      font-weight: normal
+    label
+      display: block
+      text-align: center
+      color: #ffffff
+      font-size: 18px
+    #screenNameInput
+      display: block
+      font-size: 28px
+      border: 1px solid #cccccc
+      width: 400px
+      padding: 4px
+      text-align: center
+      margin: 10px auto
+      border-radius: 4px
+    #screenLoginButton
+      display: block
+      font-size: 20px
+      border: 2px solid #cccccc
+      border-radius: 6px
+      background-color: #999999
+      padding: 4px
+      width: 200px
+      margin: 10px auto
+    .screenMessage
+      font-weight: bold
+      color: #ffffff
+      text-align: center
+      font-size: 30px
+      margin: 30px auto

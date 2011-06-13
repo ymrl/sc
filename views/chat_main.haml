@@ -1,0 +1,51 @@
+#header
+  #logoutLink
+    %a{:href=>'/logout'}
+      logout
+  %h1
+    Simple Chat
+#chat
+  #controll
+    %form{:id=>'controlForm'}
+      #controllName
+        = h "#{@name}"
+      %input{:type=>'text',:name=>'controllMessageInput',:id=>'controllMessageInput'}
+      %input{:type=>'submit',:name=>'controllSendButton',:id=>'controllSendButton'}
+  #content
+    #members
+      %button#showMembersButton ▲
+      %h2
+        参加者
+      %ul
+        - @members.each do |u|
+          %li{:class=>"member",:id=>"user_#{u.id}"}
+            = h "#{u.name}"
+    #messages
+      -@messages.each do |a|
+        %div.message{:id=>"message_#{a.id}"}
+          .name
+            = h a.name
+          .content
+            = h a.content.to_s
+          .favs
+            %div.favStars{:id=>"favStars_#{a.id}"}
+              = '★' * a.favs 
+              &nbsp;
+            %div.favNum{:id=>"favNum_#{a.id}"}
+              = h a.favs.to_s
+            %button.addFav{:id=>"addFav_#{a.id}"} ★+
+          .time
+            = h a.created.to_s
+#screen
+  .screenContent
+    %h2{:id=>'screenTitle'}
+      ログイン
+    %form{:id=>'loginForm'}
+      %label{:for=>'screenNameInput'}
+        名前を入力してください
+      %input{:type=>'text',:name=>'screenNameInput',:id=>'screenNameInput'}
+      %input{:type=>'submit',:id=>'screenLoginButton'} Login
+    .screenMessage
+%script
+  = "var logged_in = #{@logged_in?'true':'false'},user=#{@logged_in?"'#{@name}'":'null'};"
+  = "var loaded = new Date(#{@loaded.to_i*1000})"
