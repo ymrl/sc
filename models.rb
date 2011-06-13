@@ -39,7 +39,7 @@ class Messages < Sequel::Model
   end
   def Messages.recent t=Time.now-60
     t = Time.now - 7200 if Time.now - t > 7200
-    Messages.filter{modified>=t}.order_by(:id).select(:id,:name,:content,:favs,:created).all
+    Messages.filter{created>=t}.order_by(:id).select(:id,:name,:content,:favs,:created).all
   end
 end
 

@@ -168,7 +168,6 @@ $(function(){
 
 	function pre_login(){
 		$('.screenMessage').text('');
-		$('#screen').css({height:$(window).height()})
 		$('#screen').show();
 	}
 
@@ -198,6 +197,7 @@ $(function(){
 		var h = $(window).height()-$('#header').outerHeight({margin:true})-$('#controll').outerHeight({margin:true,padding:true})-30
 		$('#content').css({height:h+'px'})
 		$('#messages').css({height:h-1+'px'})
+		$('#screen').css({height:$(window).height(),width:$(window).width()})
 	}).trigger('resize')
 
 	$('.addFav').click(favButton)
