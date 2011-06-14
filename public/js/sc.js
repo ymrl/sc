@@ -166,7 +166,7 @@ $(function(){
 	}
 
 	function pre_login(){
-		$('#screenLgoin .screenMessage').text('');
+		$('#screenLgoin .screenMessage').empty();
 		$('#screenLogin').show();
 		$('#screen').show();
 	}
