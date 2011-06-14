@@ -129,7 +129,7 @@ get '/' do
     @logged_in = false
     @name ="no name"
   end
-  @messages = Messages.order_by(:created).reverse.limit(15).all
+  @messages = Messages.order_by(:created).reverse.limit(20).all
   @members = Users.filter{modified > Time.now-EXPIRE_TIME}.filter(:joined=>true).all
   @loaded = Time.now
   haml :chat_main
