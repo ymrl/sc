@@ -34,7 +34,7 @@ $(function(){
 				var a = $('<a>').attr({href:s[i]}).text(s[i]);
 				r += a[0].outerHTML;
 			}else{
-				var a =  $('<a>').text(s[i]);
+				var a =  $('<span>').text(s[i]);
 				r += a[0].innerHTML
 			}
 		}
