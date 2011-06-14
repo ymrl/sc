@@ -106,26 +106,9 @@ $(function(){
 		$('.screenMessage').text('Loading...');
 	}
 
-	function fail_login(){
-		$('.screenMessage').text('Login Failed');
-	}
-
-	function post_login(data,dataType){
-		if(data.complete){
-			user = data.name;
-			$('#controllName').text(user);
-			$('.screenMessage').text('Logged In');
-			$('#screenLoginButton').unbind('click');
-			$('#screen').fadeOut();
-		}else{
-			fail_login();
-		}
-	}
 	function manyStars(t){
 		s = ''
-		for(var i=0;i<t;i++){
-			s += '★'
-		}
+		for(var i=0;i<t;i++){ s += '★' }
 		return s
 	}
 	function addMessage(m){
@@ -166,13 +149,30 @@ $(function(){
 		if(data.recent){newInformations(data.recent)}
 	}
 
-	function pre_login(){
-		$('.screenMessage').text('');
-		$('#screen').show();
+	function fail_login(data){
+		$('#screenLogin .screenMessage').empty().append($('<p>Login Failed</p>')).append($('<p>').text(data.warn));
 	}
 
+	function post_login(data,dataType){
+		if(data.complete){
+			user = data.name;
+			$('#controllName').text(user);
+			$('#screenLogin .screenMessage').text('Logged In');
+			$('#screenLogin').hide();
+			$('#screen').fadeOut();
+		}else{
+			fail_login(data);
+		}
+	}
+
+	function pre_login(){
+		$('#screenLgoin .screenMessage').text('');
+		$('#screenLogin').show();
+		$('#screen').show();
+	}
 	$('#loginForm').bind('submit',function(e){e.preventDefault();login();});
 	$('#controlForm').bind('submit',function(e){e.preventDefault();newMessage();});
+
 
 	if(!logged_in){ pre_login(); }
 

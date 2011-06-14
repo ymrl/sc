@@ -96,7 +96,7 @@ post '/api/user/login.json' do
     elsif exists
       user = exists
       session[:user_id] = user.id
-      user.update_time
+      user.update_time(true)
       ret[:name] = name
       ret[:complete] = true
     else
@@ -122,7 +122,7 @@ get '/' do
   user = nil
   if session[:user_id] and 
     (user = Users.filter(:id=>session[:user_id]).first) and user.alive? then
-    user.update_time
+    user.update_time(true)
     @logged_in = true
     @name = user.name
   else

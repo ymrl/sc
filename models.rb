@@ -72,9 +72,9 @@ class Users < Sequel::Model
     timestamp :created
   end
 
-  def update_time
-    if Time.now - self.modified > EXPIRE_TIME * 0.8
-      update(:modified => Time.now)
+  def update_time f=false
+    if f or Time.now - self.modified > EXPIRE_TIME * 0.8
+      self.update(:modified => Time.now)
     end
     return self
   end
