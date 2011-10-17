@@ -35,8 +35,6 @@ $(function(){
 				r += a[0].innerHTML;
 			}
 		}
-		console.log(r);
-		console.log(j.html(r));
 		return j.html(r);
 	}
 
