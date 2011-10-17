@@ -1,7 +1,6 @@
 require 'sequel'
 Sequel::Model.plugin(:schema)
 Sequel.connect("sqlite://db/sc.db")
-EXPIRE_TIME = 60*10
 
 module Sequel
   class Model
@@ -9,6 +8,10 @@ module Sequel
       r = {}
       self.columns.each{|c|r[c] = self[c] if self[c] != nil}
       return r
+    end
+    def before_update
+        self.modified = Time.now
+        super
     end
   end
   def Sequel.models_to_hash a

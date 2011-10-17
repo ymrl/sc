@@ -2,9 +2,12 @@
 %html
   %head
     %meta{"http-equiv"=>"Content-Type",:content=>"text/html; charset=UTF-8"}
-    %script{:src=>"/js/lib/jquery-1.6.1.min.js"}
-    %script{:src=>"/js/sc.js"}
-    %link{:rel=>"stylesheet", :type=>"text/css",:href=>"/css/main.css"}
-    %title Simple Chat
+    %script{:src=> URL_BASE + "/js/lib/jquery-1.6.1.min.js"}
+    %script
+      = "var apiBase = '#{API_BASE}'"
+    %script{:src=>URL_BASE + "/js/sc.js"}
+    %link{:rel=>"stylesheet", :type=>"text/css",:href=>URL_BASE + "/css/main.css"}
+    %title
+      = TITLE
   %body
     = yield

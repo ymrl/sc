@@ -1,44 +1,43 @@
 $(function(){
-	var userInfo
 	if(default_data){
-		var logged_in = default_data.logged_in
-		var user = default_data.user
-		var lastUpdate = new Date(default_data.loaded)
+		var logged_in = default_data.logged_in;
+		var user = default_data.user;
+		var lastUpdate = new Date(default_data.loaded);
 	}else{
-		var logged_in = false
-		var user = null
-		var lastUpdate = new Date()
+		var logged_in = false;
+		var user = null;
+		var lastUpdate = new Date();
 	}
+
 	var favButton = function(e){
-		var matched= $(this).attr('id').match(/addFav_(\d+)/);
+		var matched = $(this).attr('id').match(/addFav_(\d+)/);
 		if(!matched){return null;}
-		var mesId = matched[1]
+		var mesId = matched[1];
 		$.ajax({
 			type:"POST",
-			url:"/api/chat/favs/new.json",
-			data:{
-				message_id:mesId,
-				since:Math.floor(lastUpdate.getTime()/1000)
-			},
+			url: apiBase + "/messages/"+mesId+"/add_fav.json",
+			data:{ since:Math.floor(lastUpdate.getTime()/1000) },
 			dataType:"json",
-			success:post_favButton
+			success:post_favButton,
 		});
 	}
 
 	function autoLink(j){
-		var regURL = /(http:\/\/[^'"\s　]+)/
-		var s = j.text().split(regURL)
-		var r = ''
+		var regURL = /(http:\/\/[^'"\s　]+)/;
+		var s = j.text().split(regURL);
+		var r = '';
 		for(var i=0;i<s.length;i++){
 			if(s[i].match(regURL)){
-				var a = $('<a>').attr({href:s[i]}).text(s[i]);
-				r += a[0].outerHTML;
+				var a = $('<span>').append($('<a>').attr({target:"_blank",href:s[i]}).text(s[i]));
+				r += a[0].innerHTML;
 			}else{
 				var a =  $('<span>').text(s[i]);
-				r += a[0].innerHTML
+				r += a[0].innerHTML;
 			}
 		}
-		j.html(r)
+		console.log(r);
+		console.log(j.html(r));
+		return j.html(r);
 	}
 
 	function post_favButton(data){
@@ -95,10 +94,10 @@ $(function(){
 	function login(e){
 		$.ajax({
 			type:"POST",
-			url:"/api/user/login.json",
+			url: apiBase + "/user/login.json",
 			data:{
 				name:$('#screenNameInput').val(),
-				since:Math.floor(lastUpdate.getTime()/1000)
+				since:Math.floor(lastUpdate.getTime()/1000),
 			},
 			dataType:"json",
 			success: post_login,
@@ -108,14 +107,14 @@ $(function(){
 	}
 
 	function manyStars(t){
-		s = ''
-		for(var i=0;i<t;i++){ s += '★' }
-		return s
+		s = '';
+		for(var i=0;i<t;i++){ s += '★'; }
+		return s;
 	}
 	function addMessage(m){
 		var mId = "message_"+m.id;
 		if($('#'+mId).length){return null}
-		var messageDiv = $('<div id="'+mId+'" class="message">');
+		var messageDiv = $('<div id="'+mId+'" class="message">').hide();
 		var messageName = $('<div class="name">').text(m.name)
 		var messageContent = $('<div class="content">').text(m.content)
 		var messageTime = $('<div class="time">').text(m.created)
@@ -126,15 +125,16 @@ $(function(){
 				$('<div class="favNum">').attr({id:"favNum_"+m.id}).text(m.favs)
 				).append(
 				$('<button class="addFav" id="addFav_'+m.id+'">').text('★+').click(favButton));
-		messageDiv.append(messageName).append(messageContent).append(messageTime).append(messageFav)
+		messageDiv.append(messageName).append(messageContent).append(messageTime).append(messageFav);
 		$('#messages').prepend(messageDiv);
+		messageDiv.slideDown();
 	}
 
 	function newMessage(){
 		var mes = $('#controllMessageInput').val();
 		$.ajax({
 			type:"POST",
-			url:"/api/chat/messages/new.json",
+			url: apiBase + "/messages/new.json",
 			data:{
 				message:mes,
 				since:Math.floor(lastUpdate.getTime()/1000)
@@ -142,9 +142,8 @@ $(function(){
 			dataType:"json",
 			success: post_newMessage,
 		});
-		$('#controllMessageInput').val('')
+		$('#controllMessageInput').val('');
 	}
-
 	function post_newMessage(data){
 		if(!data.logged_in){pre_login()}
 		if(data.recent){newInformations(data.recent)}
@@ -171,35 +170,35 @@ $(function(){
 		$('#screenLogin').show();
 		$('#screen').show();
 	}
-	$('#loginForm').bind('submit',function(e){e.preventDefault();login();});
-	$('#controlForm').bind('submit',function(e){e.preventDefault();newMessage();});
-
 
 	if(!logged_in){ pre_login(); }
+
+	$('#loginForm').bind('submit',function(e){e.preventDefault();login();});
+	$('#controlForm').bind('submit',function(e){e.preventDefault();newMessage();});
 
 	setInterval(function(){
 		$.ajax({
 			type:"get",
-			url:"/api/chat/messages/recent.json",
+			url: apiBase + "/chat/recent.json",
 			dataType:"json",
 			data:{
 				since:Math.floor(lastUpdate.getTime()/1000)
 			},
 			success: newInformations,
 		});
-	},5000)
+	},5000);
+
 
 	$('#showMembersButton').click(function(){
-		$('#members ul').slideToggle()
-		$(this).text($(this).text()==='▼'?'▲':'▼')
+		$('#members ul').slideToggle();
+		$(this).text($(this).text()==='▼'?'▲':'▼');
 	});
 
 	$(window).bind('resize',function(){
-		var h = $(window).height()-$('#header').outerHeight({margin:true})-$('#controll').outerHeight({margin:true,padding:true})-30
-		$('#content').css({height:h+'px'})
-		$('#messages').css({height:h-1+'px'})
-		$('#screen').css({height:$(window).height(),width:$(window).width()})
-	}).trigger('resize')
-
-	$('.addFav').click(favButton)
+		var h = $(window).height()-$('#header').outerHeight({margin:true,pading:true})-$('#controll').outerHeight({margin:true,padding:true}) - ($('#chat').outerHeight({margin:true,border:true,padding:true})-$('#chat').height());
+		$('#content').css({height:h+'px'});
+		$('#messages').css({height:h-1+'px'});
+		$('#screen').css({height:$(window).height(),width:$(window).width()});
+	}).trigger('resize');
+	$('.addFav').click(favButton);
 });
