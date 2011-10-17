@@ -1,0 +1,6 @@
+:session: 
+  :expire: 600
+  :secret: changeme
+:title: Simple Chat
+:urlBase: ""
+:apiBase: /api
