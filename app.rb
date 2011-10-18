@@ -28,12 +28,21 @@ get '/css/main.css' do
   sass :main_style
 end
 
-=begin
-get '/logs/:date_str' do |date_str|
-  matched = date_str.split(/(\d{4})(\d{2})(\d{2})/)
-  @message = Messages.find(:id=>id)
+get '/archives/' do
+  haml :archives
 end
-=end
+
+get '/archives/:date_str' do
+  matched = params[:date_str].match(/(\d{4})-(\d{2})-(\d{2})/)
+  if !matched
+    error 404
+  else
+    @date = Time.new(matched[1].to_i,matched[2].to_i,matched[3].to_i)
+    date = @date
+    @messages = Messages.order_by(:created).reverse.filter{created > date}.filter{created < date+(24*60*60)}.all
+    haml :log
+  end
+end
 
 get '/' do
   user = nil
@@ -56,6 +65,6 @@ get '/logout' do
   if user = (session[:user_id]? Users.filter(:id=>session[:user_id]).first : nil)
     user.update(:joined => false)
   end
-  session.keys.each{|k|session[k] = nil}
+  session.keys.each{|k|puts k;session[k] = nil}
   redirect URL_BASE + '/'
 end

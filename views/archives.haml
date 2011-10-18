@@ -1,0 +1,30 @@
+%header
+  %nav
+    %a{:href => URL_BASE+'/archives/'}
+      archives
+    %a{:href => URL_BASE+'/logout'}
+      logout
+  %h1
+    = TITLE
+#archive
+  %a{:href => URL_BASE+"/"}トップに戻る
+  %ul
+    - a = Time.now
+    - 30.times do |i|
+      %li
+        %a{:Href => "#{URL_BASE}/archives/#{a.strftime('%Y-%m-%d')}"}
+          = a.strftime('%Y-%m-%d')
+      - a -= (60 * 60 * 24)
+#screen
+  .screenContent{:id=>'screenLogin'}
+    %h2{:id=>'screenTitle'}
+      ログイン
+    %form{:id=>'loginForm'}
+      %label{:for=>'screenNameInput'}
+        名前を入力してください
+      %input{:type=>'text',:name=>'screenNameInput',:id=>'screenNameInput'}
+      %input{:type=>'submit',:id=>'screenLoginButton'} Login
+    .screenMessage
+%script
+  - default_data = {:logged_in=>(@logged_in?true : false),:user=>(@logged_in?h(@name):nil),:loaded=>@loaded,:controlls=>false}.to_json
+  = "var default_data=#{default_data};"

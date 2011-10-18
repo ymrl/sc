@@ -3,10 +3,12 @@ $(function(){
 		var logged_in = default_data.logged_in;
 		var user = default_data.user;
 		var lastUpdate = new Date(default_data.loaded);
+		var controls = default_data.controls;
 	}else{
 		var logged_in = false;
 		var user = null;
 		var lastUpdate = new Date();
+		var controls = false;
 	}
 
 	var favButton = function(e){
@@ -129,7 +131,7 @@ $(function(){
 	}
 
 	function newMessage(){
-		var mes = $('#controllMessageInput').val();
+		var mes = $('#controlMessageInput').val();
 		$.ajax({
 			type:"POST",
 			url: apiBase + "/messages/new.json",
@@ -140,7 +142,7 @@ $(function(){
 			dataType:"json",
 			success: post_newMessage,
 		});
-		$('#controllMessageInput').val('');
+		$('#controlMessageInput').val('');
 	}
 	function post_newMessage(data){
 		if(!data.logged_in){pre_login()}
@@ -154,10 +156,12 @@ $(function(){
 	function post_login(data,dataType){
 		if(data.complete){
 			user = data.name;
-			$('#controllName').text(user);
+			$('#controlName').text(user);
 			$('#screenLogin .screenMessage').text('Logged In');
+			$('body').css({overflow:'visible'});
 			$('#screenLogin').hide();
 			$('#screen').fadeOut();
+			$('.addFav').removeAttr('disabled');
 		}else{
 			fail_login(data);
 		}
@@ -167,36 +171,37 @@ $(function(){
 		$('#screenLgoin .screenMessage').empty();
 		$('#screenLogin').show();
 		$('#screen').show();
+		$('body').css({overflow:'hidden'});
+		$('.addFav').attr({disabled:true});
 	}
 
-	if(!logged_in){ pre_login(); }
 
 	$('#loginForm').bind('submit',function(e){e.preventDefault();login();});
-	$('#controlForm').bind('submit',function(e){e.preventDefault();newMessage();});
+	if(!logged_in){ $('.addFav').attr({disabled:true}); }
 
-	setInterval(function(){
-		$.ajax({
-			type:"get",
-			url: apiBase + "/chat/recent.json",
-			dataType:"json",
-			data:{
-				since:Math.floor(lastUpdate.getTime()/1000)
-			},
-			success: newInformations,
+	if(controls){
+		if(!logged_in){ pre_login(); }
+		$('#controlForm').bind('submit',function(e){e.preventDefault();newMessage();});
+		setInterval(function(){
+			$.ajax({
+				type:"get",
+				url: apiBase + "/chat/recent.json",
+				dataType:"json",
+				data:{
+					since:Math.floor(lastUpdate.getTime()/1000)
+				},
+				success: newInformations,
+			});
+		},5000);
+
+
+		$('#showMembersButton').click(function(){
+			$('#members ul').slideToggle();
+			$(this).text($(this).text()==='▼'?'▲':'▼');
 		});
-	},5000);
-
-
-	$('#showMembersButton').click(function(){
-		$('#members ul').slideToggle();
-		$(this).text($(this).text()==='▼'?'▲':'▼');
-	});
-
+	}
 	$(window).bind('resize',function(){
-		var h = $(window).height()-$('#header').outerHeight({margin:true,pading:true})-$('#controll').outerHeight({margin:true,padding:true}) - ($('#chat').outerHeight({margin:true,border:true,padding:true})-$('#chat').height());
-		$('#content').css({height:h+'px'});
-		$('#messages').css({height:h-1+'px'});
-		$('#screen').css({height:$(window).height(),width:$(window).width()});
+	  $('#screen').css({width:$(this).width(),height:$(this).height()});
 	}).trigger('resize');
 	$('.addFav').click(favButton);
 });

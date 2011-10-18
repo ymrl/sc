@@ -1,27 +1,19 @@
 %header
   %nav
-    %a{:href => URL_BASE+'/archives/'}
-      archives
+    %a
     %a{:href => URL_BASE+'/logout'}
       logout
   %h1
     = TITLE
-#control
-  %form{:id=>'controlForm'}
-    #controlName
-      = h "#{@name}"
-    #controlMessage
-      %input{:type=>'text',:name=>'controlMessageInput',:id=>'controlMessageInput'}
-    %input{:type=>'submit',:name=>'controlSendButton',:id=>'controlSendButton'}
-#members
-  %button#showMembersButton ▲
-  %h2
-    参加者
-  %ul
-    - @members.each do |u|
-      %li{:class=>"member",:id=>"user_#{u.id}"}
-        = h "#{u.name}"
 #messages
+  %nav
+    &lt;&lt;
+    %a{:href => URL_BASE+"/archives/#{(@date-60*60*24).strftime("%Y-%m-%d")}"}前の日
+    =" | "
+    %a{:href => URL_BASE+"/"}トップ
+    =" | "
+    %a{:href => URL_BASE+"/archives/#{(@date+60*60*24).strftime("%Y-%m-%d")}"}次の日
+    &gt;&gt;
   -@messages.each do |a|
     %div.message{:id=>"message_#{a.id}"}
       .name
@@ -48,5 +40,5 @@
       %input{:type=>'submit',:id=>'screenLoginButton'} Login
     .screenMessage
 %script
-  - default_data = {:logged_in=>(@logged_in?true : false),:user=>(@logged_in?h(@name):nil),:loaded=>@loaded.to_i*1000,:controls=>true}.to_json
+  - default_data = {:logged_in=>(@logged_in?true : false),:user=>(@logged_in?h(@name):nil),:loaded=>@loaded,:controlls=>false}.to_json
   = "var default_data=#{default_data};"
