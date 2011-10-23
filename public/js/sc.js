@@ -23,6 +23,11 @@ $(function(){
 			success:post_favButton,
 		});
 	}
+	var pushFavButton = function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		$(this).find('.addFav').click();
+	}
 
 	function autoLink(j){
 		var regURL = /(http:\/\/[^'"\s　]+)/;
@@ -126,6 +131,7 @@ $(function(){
 				).append(
 				$('<button class="addFav" id="addFav_'+m.id+'">').text('★+').click(favButton));
 		messageDiv.append(messageName).append(messageContent).append(messageTime).append(messageFav);
+		messageDiv.dblclick(pushFavButton);
 		$('#messages').prepend(messageDiv);
 		messageDiv.slideDown();
 	}
@@ -203,5 +209,6 @@ $(function(){
 	$(window).bind('resize',function(){
 	  $('#screen').css({width:$(this).width(),height:$(this).height()});
 	}).trigger('resize');
+	$('.message').dblclick(pushFavButton);
 	$('.addFav').click(favButton);
 });
